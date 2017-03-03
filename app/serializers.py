@@ -1,21 +1,21 @@
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
-from .models import Account
+from .models import User
 
 
-class AccountSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
-        model = Account
+        model = User
         fields = (
             'id', 'email', 'username', 'date_created', 'date_modified',
             'firstname', 'lastname', 'password', 'confirm_password')
         read_only_fields = ('date_created', 'date_modified')
 
     def create(self, validated_data):
-        return Account.objects.create_user(**validated_data)
+        return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
