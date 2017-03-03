@@ -90,5 +90,5 @@ ENV/
 
 .idea/
 
-wifill_api/settings.py
+wefill_api/settings.py
 db.sqlite3
