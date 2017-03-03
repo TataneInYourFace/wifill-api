@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import BaseUserManager
 
 
-class AccountManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
         # Ensure that an email address is set
         if not email:
@@ -13,28 +13,29 @@ class AccountManager(BaseUserManager):
         if not kwargs.get('username'):
             raise ValueError('Users must have a valid username')
 
-        account = self.model(
-            email=self.normalize_email(email),
-            username=kwargs.get('username'),
+        mail = self.normalize_email(email)
+        user = self.model(
+            email=mail,
+            username=mail,
             firstname=kwargs.get('firstname', None),
             lastname=kwargs.get('lastname', None),
         )
 
-        account.set_password(password)
-        account.save()
+        user.set_password(password)
+        user.save()
 
-        return account
+        return user
 
     def create_superuser(self, email, password=None, **kwargs):
-        account = self.create_user(email, password, kwargs)
+        user = self.create_user(email, password, kwargs)
 
-        account.is_admin = True
-        account.save()
+        user.is_admin = True
+        user.save()
 
-        return account
+        return user
 
 
-class Account(AbstractBaseUser):
+class User(AbstractBaseUser):
     username = models.CharField(unique=True, max_length=50)
     email = models.EmailField(unique=True)
 
@@ -46,7 +47,7 @@ class Account(AbstractBaseUser):
 
     is_admin = models.BooleanField(default=False)
 
-    objects = AccountManager()
+    objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

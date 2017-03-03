@@ -1,11 +1,15 @@
-from django.conf.urls import url
-from .views import AuthRegister
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+from django.conf.urls import url, include
+from .views import AuthRegister, UserViewSet
+from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework import routers
+
+router = routers.SimpleRouter()
+router.register(r'users', UserViewSet, "users")
 
 
 urlpatterns = [
     url(r'^login/', obtain_jwt_token),
-    url(r'^token-refresh/', refresh_jwt_token),
-    url(r'^token-verify/', verify_jwt_token),
     url(r'^register/$', AuthRegister.as_view()),
 ]
+
+urlpatterns += router.urls
