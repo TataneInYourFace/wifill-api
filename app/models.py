@@ -20,10 +20,8 @@ class UserManager(BaseUserManager):
             firstname=kwargs.get('firstname', None),
             lastname=kwargs.get('lastname', None),
         )
-
         user.set_password(password)
         user.save()
-
         return user
 
     def create_superuser(self, email, password=None, **kwargs):
