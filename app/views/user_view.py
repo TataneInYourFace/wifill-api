@@ -17,11 +17,13 @@ class UserViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """GET - Show all users"""
-        # print(request.version)
-        users = User.objects.all()
+        if request.user.is_admin:
+            users = User.objects.all()
+        else:
+            users = User.objects.filter(email=request.user.email)
         if users is None:
             return Response({})
-        serializer = self.serializer_class(User.objects.all(), many=True)
+        serializer = self.serializer_class(users, many=True)
         return Response(serializer.data)
 
     def create(self, request):
@@ -36,7 +38,20 @@ class UserViewSet(viewsets.ViewSet):
             response = serializer.data.copy()
             response.update({'token': token})
             return Response(response, status=status.HTTP_201_CREATED)
-        return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, email=None):
+        if request.user.is_admin or (email is not None and request.user.email == email):
+            user = User.objects.get(email=email)
+            serializer = self.serializer_class(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                user = serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
     def retrieve(self, request, email=None):
         """GET - Show <email> user"""
@@ -53,3 +68,10 @@ class UserViewSet(viewsets.ViewSet):
         # api_result = user_detail.destroy_the_user(email)
         # return Response(api_result)
 
+    def can_write(self, request, email=None):
+        if email is None and request.data['email']:
+            return request.user.is_admin or request.user.email == request.data['email']
+        elif email is None:
+            return request.user.is_admin
+        else:
+            return request.user.is_admin or request.user.email == email

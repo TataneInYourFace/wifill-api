@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
-class IsPostOrIsAuthenticated(permissions.BasePermission):
 
+class IsPostOrIsAuthenticated(permissions.BasePermission):
     def has_permission(self, request, view):
         # allow all POST requests
         if request.method == 'POST':
