@@ -18,19 +18,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         addresses_data = validated_data.pop('address_set')
-        user = User.objects.update_or_create(**validated_data)
+        user = User.objects.create_user(**validated_data)
         for address_data in addresses_data:
             Address.objects.create(user=user, **address_data)
         return user
 
     def update(self, instance, validated_data):
-        pprint.pprint(validated_data)
         for attr, value in validated_data.items():
-            print(attr)
-            print(value)
             setattr(instance, attr, value)
         instance.save()
-        print(instance)
         return instance
 
     # def to_internal_value(self, data):
@@ -46,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
         '''
         Ensure the passwords are the same
         '''
-        print("lul")
         if 'password' in data:
             if data['password'] != data['confirm_password']:
                 raise serializers.ValidationError(

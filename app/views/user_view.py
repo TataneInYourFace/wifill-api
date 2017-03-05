@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from app.permissions.user_permission import IsPostOrIsAuthenticated
+from app.permissions.user_permission import *
 from app.serializers import UserSerializer
 from app.models import User
 from rest_framework_jwt.settings import api_settings
@@ -9,7 +9,7 @@ from rest_framework_jwt.settings import api_settings
 
 class UserViewSet(viewsets.ViewSet):
 
-    permission_classes = (IsPostOrIsAuthenticated,)
+    permission_classes = (IsPostOrIsAuthenticated, IsOwnerOrIsAdmin,)
     serializer_class = UserSerializer
     # Router class variables
     lookup_field = 'email'
@@ -42,16 +42,16 @@ class UserViewSet(viewsets.ViewSet):
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, email=None):
-        if request.user.is_admin or (email is not None and request.user.email == email):
-            user = User.objects.get(email=email)
-            serializer = self.serializer_class(user, data=request.data, partial=True)
-            if serializer.is_valid():
-                user = serializer.save()
-                return Response(serializer.data)
-            else:
-                return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(email=email)
+        self.check_object_permissions(request, user)
+        if not self.request.user.is_admin and "is_admin" in request.data:
+            request.data.pop("is_admin")
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
         else:
-            return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, email=None):
         """GET - Show <email> user"""
