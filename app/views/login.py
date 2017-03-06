@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from app.serializers import UserSerializer
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import authenticate
+import json
 
 
 class LoginView(APIView):
@@ -16,8 +17,8 @@ class LoginView(APIView):
     #
 
     def post(self, request, format=None):
-        username = request.POST['email']
-        password = request.POST['password']
+        username = request.data['email']
+        password = request.data['password']
         user = authenticate(username=username, password=password)
         if user:
             serializer = self.serializer_class(user)
