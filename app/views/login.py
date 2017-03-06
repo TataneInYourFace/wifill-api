@@ -14,7 +14,6 @@ class LoginView(APIView):
     """
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
-    #
 
     def post(self, request, format=None):
         username = request.data['email']
