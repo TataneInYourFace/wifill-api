@@ -26,7 +26,6 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **kwargs):
         user = self.create_user(email, password, kwargs)
-
         user.is_admin = True
         user.save()
 
@@ -34,7 +33,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    username = models.CharField(unique=True, max_length=50)
+
+    username = models.CharField(unique=True, max_length=255)
     email = models.EmailField(unique=True)
 
     firstname = models.CharField(max_length=100, blank=True)
