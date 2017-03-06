@@ -1,2 +1,2 @@
-from .login_view import *
-from .user_view import *
+from app.views.login import *
+from app.views.user import *

@@ -1,5 +1,5 @@
 from app.models import User
-from .address_serializer import *
+from app.serializers.address import *
 
 
 class UserSerializer(serializers.ModelSerializer):

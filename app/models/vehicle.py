@@ -1,5 +1,5 @@
 from django.db import models
-from .user_model import User
+from app.models.user import User
 
 
 class Vehicle(models.Model):

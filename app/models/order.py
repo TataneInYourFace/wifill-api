@@ -1,7 +1,7 @@
 from django.db import models
-from .user_model import User
-from .vehicle_model import Vehicle
-from .address_model import Address
+from app.models.user import User
+from app.models.vehicle import Vehicle
+from app.models.address import Address
 
 
 class Order(models.Model):
