@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
@@ -42,7 +43,10 @@ class UserViewSet(viewsets.ViewSet):
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, email=None):
-        user = User.objects.get(email=email)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise Http404
         self.check_object_permissions(request, user)
         if not self.request.user.is_admin and "is_admin" in request.data:
             request.data.pop("is_admin")
@@ -60,18 +64,13 @@ class UserViewSet(viewsets.ViewSet):
         # api_result = user_detail.retrieve_the_user(email)
         # return Response(api_result)
 
-    def partial_update(self, request, email=None):
-        return Response()
-
     def destroy(self, request, email=None):
-        """DETELE - Delete <email> user"""
-        # api_result = user_detail.destroy_the_user(email)
-        # return Response(api_result)
-
-    def can_write(self, request, email=None):
-        if email is None and request.data['email']:
-            return request.user.is_admin or request.user.email == request.data['email']
-        elif email is None:
-            return request.user.is_admin
-        else:
-            return request.user.is_admin or request.user.email == email
+        """DELETE - Delete <email> user"""
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise Http404
+        self.check_object_permissions(request, user)
+        if user is not None:
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
