@@ -4,6 +4,7 @@ from app.models import Address
 
 class AddressSerializer(serializers.ModelSerializer):
     id = serializers.CharField(required=False)
+    alternate_name = "mdr"
 
     class Meta:
         model = Address
