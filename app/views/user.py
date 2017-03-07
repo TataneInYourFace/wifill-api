@@ -5,8 +5,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from app.permissions.user import *
-from app.serializers import UserSerializer
-from app.models import User
+from app.serializers.user import UserSerializer
+from app.models.user import User
 from rest_framework_jwt.settings import api_settings
 
 
