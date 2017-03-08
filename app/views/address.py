@@ -6,14 +6,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from app.permissions.user import *
-from app.serializers.order import OrderSerializer
+from app.serializers.address import AddressSerializer
 from app.models.order import Order
 
 
-class OrderViewSet(viewsets.ViewSet):
+class AddressViewSet(viewsets.ViewSet):
 
     permission_classes = (IsAuthenticated, IsOwnerOrIsAdmin,)
-    serializer_class = OrderSerializer
+    serializer_class = AddressSerializer
     # Router class variables
     lookup_field = 'id'
     lookup_value_regex = '\d+'
@@ -31,9 +31,11 @@ class OrderViewSet(viewsets.ViewSet):
 
     def create(self, request):
         """POST - Add new user"""
+        # address_id = request.data.get("address")
+
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            order = serializer.save()
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,10 +1,12 @@
 from rest_framework import serializers
-from app.models import Address
+from rest_framework.relations import PrimaryKeyRelatedField
+
+from app.models.address import Address
 
 
 class AddressSerializer(serializers.ModelSerializer):
     id = serializers.CharField(required=False)
-    alternate_name = "mdr"
+    user = PrimaryKeyRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Address
