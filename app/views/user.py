@@ -20,13 +20,10 @@ class UserViewSet(viewsets.ViewSet):
 
     def list(self, request):
         """GET - Show all users"""
-        if request.user.is_admin:
-            users = User.objects.all()
-        else:
-            users = User.objects.filter(email=request.user.email)
+        users = User.objects.all()
         if users is None:
-            return Response({})
-        serializer = self.serializer_class(users, many=True)
+            return Response(status.HTTP_204_NO_CONTENT)
+        serializer = self.serializer_class(users, many=True, context={'user': request.user})
         return Response(serializer.data)
 
     def create(self, request):
@@ -61,7 +58,7 @@ class UserViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, email=None):
         """GET - Show <email> user"""
-        serializer = self.serializer_class(User.objects.get(email=email))
+        serializer = self.serializer_class(User.objects.get(email=email), context={'user': request.user})
         return Response(serializer.data)
         # api_result = user_detail.retrieve_the_user(email)
         # return Response(api_result)

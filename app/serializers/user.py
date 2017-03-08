@@ -1,3 +1,5 @@
+import pprint
+
 from rest_framework import serializers
 from app.models import Address
 from app.models import User
@@ -28,6 +30,13 @@ class UserSerializer(JoinReader):
         for key, value in join_fields.items():
             fields += (key,)
         read_only_fields = ('date_created', 'date_modified')
+
+    def to_representation(self, instance):
+        ret = super(UserSerializer, self).to_representation(instance)
+        fields_to_pop = ['id', 'address_set', 'vehicle_set', 'order_set']
+        if 'user' in self.context and instance != self.context['user']:
+            [ret.pop(field, '') for field in fields_to_pop]
+        return ret
 
     def create(self, validated_data):
         joins = self.create_joins(validated_data)

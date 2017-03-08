@@ -3,12 +3,14 @@ from app.views.login import LoginView
 from app.views.user import UserViewSet
 from app.views.order import OrderViewSet
 from app.views.address import AddressViewSet
+from app.views.vehicle import VehicleViewSet
 from rest_framework import routers
 
-router = routers.SimpleRouter(trailing_slash=False)
+router = routers.SimpleRouter()
 router.register(r'users', UserViewSet, "users")
 router.register(r'orders', OrderViewSet, "orders")
 router.register(r'addresses', AddressViewSet, "addresses")
+router.register(r'vehicles', VehicleViewSet, "vehicles")
 
 
 urlpatterns = [
