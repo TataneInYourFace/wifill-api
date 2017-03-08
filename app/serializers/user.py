@@ -5,6 +5,7 @@ from app.models import Vehicle
 from app.serializers.address import AddressSerializer
 from app.serializers.join_reader import JoinReader
 from app.serializers.vehicle import VehicleSerializer
+from app.serializers.order import OrderSerializer
 
 
 class UserSerializer(JoinReader):
@@ -13,12 +14,13 @@ class UserSerializer(JoinReader):
 
     address_set = AddressSerializer(many=True, required=False)
     vehicle_set = VehicleSerializer(many=True, required=False)
+    order_set = OrderSerializer(many=True, required=False, read_only=True)
 
     class Meta:
         model = User
         fields = (
             'id', 'email', 'username', 'date_created', 'date_modified',
-            'firstname', 'lastname', 'password', 'confirm_password', 'is_admin')
+            'firstname', 'lastname', 'password', 'confirm_password', 'is_admin', 'order_set')
         join_fields = {
             'address_set': Address,
             'vehicle_set': Vehicle
