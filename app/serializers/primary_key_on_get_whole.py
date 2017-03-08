@@ -5,7 +5,7 @@ class PrimaryKeyOnGetWholeField(PrimaryKeyRelatedField):
     def __init__(self, **kwargs):
         self.class_name = kwargs.pop("class_name", None)
         self.class_serializer = kwargs.pop("class_serializer", None)
-        super().__init__(**kwargs)
+        PrimaryKeyRelatedField.__init__(self, **kwargs)
 
     def get_queryset(self):
         return self.class_name.objects.all()

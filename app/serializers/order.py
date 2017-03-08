@@ -4,12 +4,12 @@ from app.models.vehicle import Vehicle
 from app.models.order import Order
 from app.serializers.address import AddressSerializer
 from app.serializers.vehicle import VehicleSerializer
-from app.serializers.join_renderer import PrimaryKeyGetWholeField
+from app.serializers.primary_key_on_get_whole import PrimaryKeyOnGetWholeField
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    address = PrimaryKeyGetWholeField(many=False, required=True, class_name=Address, class_serializer=AddressSerializer)
-    vehicle = PrimaryKeyGetWholeField(many=False, required=True, class_name=Vehicle, class_serializer=VehicleSerializer)
+    address = PrimaryKeyOnGetWholeField(many=False, required=True, class_name=Address, class_serializer=AddressSerializer)
+    vehicle = PrimaryKeyOnGetWholeField(many=False, required=True, class_name=Vehicle, class_serializer=VehicleSerializer)
 
     class Meta:
         model = Order
