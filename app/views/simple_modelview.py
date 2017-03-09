@@ -1,3 +1,5 @@
+import pprint
+
 from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +9,7 @@ from app.permissions.user import *
 
 class SimpleModelViewSet(viewsets.ViewSet):
 
+    is_related_to_user = True
     model_class = None
     permission_classes = (IsAuthenticated, IsOwnerOrIsAdmin,)
     serializer_class = None
@@ -19,15 +22,23 @@ class SimpleModelViewSet(viewsets.ViewSet):
             model = self.model_class.objects.get(id=id)
         except self.model_class.DoesNotExist:
             raise Http404
-        self.check_object_permissions(request, model)
+        if self.is_related_to_user:
+            self.check_object_permissions(request, model)
         serializer = self.serializer_class(model)
+        pprint.pprint(serializer.data)
         return Response(serializer.data)
 
     def list(self, request):
         if request.user.is_admin:
-            models = self.model_class.objects.all()
+            if hasattr(self.model_class, 'is_valid'):
+                models = self.model_class.objects.filter(is_valid=True)
+            else:
+                models = self.model_class.objects.all()
         else:
-            models = self.model_class.objects.filter(user=request.user)
+            if hasattr(self.model_class, 'is_valid'):
+                models = self.model_class.objects.filter(user=request.user, is_valid=True)
+            else:
+                models = self.model_class.objects.filter(user=request.user)
         if models is None:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = self.serializer_class(models, many=True)
@@ -46,7 +57,8 @@ class SimpleModelViewSet(viewsets.ViewSet):
             model = self.model_class.objects.get(id=id)
         except self.model_class.DoesNotExist:
             raise Http404
-        self.check_object_permissions(request, model)
+        if self.is_related_to_user:
+            self.check_object_permissions(request, model)
         serializer = self.serializer_class(model, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -59,6 +71,11 @@ class SimpleModelViewSet(viewsets.ViewSet):
             model = self.model_class.objects.get(id=id)
         except self.model_class.DoesNotExist:
             raise Http404
-        self.check_object_permissions(request, model)
-        model.delete()
+        if self.is_related_to_user:
+            self.check_object_permissions(request, model)
+            if hasattr(model, 'is_valid'):
+                model.is_active = False
+                model.save()
+            else:
+                model.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

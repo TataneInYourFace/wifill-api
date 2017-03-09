@@ -11,6 +11,9 @@ class PrimaryKeyOnGetWholeField(PrimaryKeyRelatedField):
         return self.class_name.objects.all()
 
     def to_representation(self, value):
-        model = self.class_name.objects.get(id=value.pk)
+        try:
+            model = self.class_name.objects.get(id=value.pk)
+        except self.class_name.DoesNotExist:
+            return None
         serializer = self.class_serializer(model)
         return serializer.data

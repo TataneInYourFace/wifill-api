@@ -19,7 +19,7 @@ class LoginView(APIView):
         username = request.data['email']
         password = request.data['password']
         user = authenticate(username=username, password=password)
-        if user:
+        if user and user.is_valide:
             serializer = self.serializer_class(user)
             jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
             jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
