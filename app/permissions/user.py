@@ -13,5 +13,5 @@ class IsPostOrIsAuthenticated(permissions.BasePermission):
 
 class IsOwnerOrIsAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        return request.user.is_admin or obj == request.user
+        return request.user.is_admin or obj.user_id == request.user.id
 

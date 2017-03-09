@@ -19,7 +19,6 @@ class UserViewSet(viewsets.ViewSet):
     lookup_value_regex = '[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}'
 
     def list(self, request):
-        """GET - Show all users"""
         users = User.objects.all()
         if users is None:
             return Response(status.HTTP_204_NO_CONTENT)
@@ -27,7 +26,6 @@ class UserViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        """POST - Add new user"""
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -57,19 +55,16 @@ class UserViewSet(viewsets.ViewSet):
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, email=None):
-        """GET - Show <email> user"""
         serializer = self.serializer_class(User.objects.get(email=email), context={'user': request.user})
         return Response(serializer.data)
-        # api_result = user_detail.retrieve_the_user(email)
-        # return Response(api_result)
 
     def destroy(self, request, email=None):
-        """DELETE - Delete <email> user"""
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise Http404
         self.check_object_permissions(request, user)
         if user is not None:
-            user.delete()
+            user.is_valide = False
+            user.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
