@@ -44,6 +44,7 @@ class User(AbstractBaseUser):
     date_modified = models.DateTimeField(auto_now=True)
 
     is_admin = models.BooleanField(default=False)
+    is_valide = models.BooleanField(default=True)
 
     objects = UserManager()
 

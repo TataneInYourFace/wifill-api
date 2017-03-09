@@ -1,10 +1,12 @@
+import pprint
+
 from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from app.permissions.user import *
-from app.serializers import UserSerializer
-from app.models import User
+from app.serializers.user import UserSerializer
+from app.models.user import User
 from rest_framework_jwt.settings import api_settings
 
 
@@ -17,18 +19,13 @@ class UserViewSet(viewsets.ViewSet):
     lookup_value_regex = '[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}'
 
     def list(self, request):
-        """GET - Show all users"""
-        if request.user.is_admin:
-            users = User.objects.all()
-        else:
-            users = User.objects.filter(email=request.user.email)
+        users = User.objects.filter(is_valide=True)
         if users is None:
-            return Response({})
-        serializer = self.serializer_class(users, many=True)
+            return Response(status.HTTP_204_NO_CONTENT)
+        serializer = self.serializer_class(users, many=True, context={'user': request.user})
         return Response(serializer.data)
 
     def create(self, request):
-        """POST - Add new user"""
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -44,7 +41,7 @@ class UserViewSet(viewsets.ViewSet):
 
     def update(self, request, email=None):
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, is_valide=True)
         except User.DoesNotExist:
             raise Http404
         self.check_object_permissions(request, user)
@@ -58,19 +55,16 @@ class UserViewSet(viewsets.ViewSet):
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, email=None):
-        """GET - Show <email> user"""
-        serializer = self.serializer_class(User.objects.get(email=email))
+        serializer = self.serializer_class(User.objects.get(email=email, is_valide=True), context={'user': request.user})
         return Response(serializer.data)
-        # api_result = user_detail.retrieve_the_user(email)
-        # return Response(api_result)
 
     def destroy(self, request, email=None):
-        """DELETE - Delete <email> user"""
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise Http404
         self.check_object_permissions(request, user)
         if user is not None:
-            user.delete()
+            user.is_valide = False
+            user.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
