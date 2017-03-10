@@ -92,7 +92,3 @@ ENV/
 
 wefill_api/settings.py
 db.sqlite3
-
-app/migrations/*
-!app/migrations/0001_initial.py
-!app/migrations/__init__.py
