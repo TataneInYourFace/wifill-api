@@ -4,7 +4,7 @@ from app.views.user import UserViewSet
 from app.views.order import OrderViewSet
 from app.views.address import AddressViewSet
 from app.views.vehicle import VehicleViewSet
-from app.views.gaz import GazViewSet
+from app.views.gas import GasViewSet
 from rest_framework import routers
 
 router = routers.SimpleRouter()
@@ -12,7 +12,7 @@ router.register(r'users', UserViewSet, "users")
 router.register(r'orders', OrderViewSet, "orders")
 router.register(r'addresses', AddressViewSet, "addresses")
 router.register(r'vehicles', VehicleViewSet, "vehicles")
-router.register(r'gaz', GazViewSet, "gaz")
+router.register(r'gas', GasViewSet, "gas")
 
 
 urlpatterns = [

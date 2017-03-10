@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from app.models.gaz import Gaz
+from app.models.gas import Gas
 
 
-class GazSerializer(serializers.ModelSerializer):
+class GasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Gaz
+        model = Gas
         fields = (
             'id', 'name', 'price',)
