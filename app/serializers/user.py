@@ -1,5 +1,3 @@
-import pprint
-
 from rest_framework import serializers
 from app.models import Address
 from app.models import User
@@ -14,8 +12,8 @@ class UserSerializer(JoinReader):
     password = serializers.CharField(write_only=True, required=True)
     confirm_password = serializers.CharField(write_only=True, required=True)
 
-    address_set = AddressSerializer(many=True, required=False)
-    vehicle_set = VehicleSerializer(many=True, required=False)
+    address_set = AddressSerializer(many=True, required=False,)
+    vehicle_set = VehicleSerializer(many=True, required=False,)
     order_set = OrderSerializer(many=True, required=False, read_only=True)
 
     class Meta:

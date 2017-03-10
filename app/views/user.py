@@ -1,5 +1,3 @@
-import pprint
-
 from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -44,7 +42,8 @@ class UserViewSet(viewsets.ViewSet):
             user = User.objects.get(email=email, is_valide=True)
         except User.DoesNotExist:
             raise Http404
-        self.check_object_permissions(request, user)
+        if not (request.user.is_admin or user.id == request.user.id):
+            raise AttributeError
         if not self.request.user.is_admin and "is_admin" in request.data:
             request.data.pop("is_admin")
         serializer = self.serializer_class(user, data=request.data, partial=True)

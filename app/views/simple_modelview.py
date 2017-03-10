@@ -1,5 +1,3 @@
-import pprint
-
 from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -25,7 +23,6 @@ class SimpleModelViewSet(viewsets.ViewSet):
         if self.is_related_to_user:
             self.check_object_permissions(request, model)
         serializer = self.serializer_class(model)
-        pprint.pprint(serializer.data)
         return Response(serializer.data)
 
     def list(self, request):

@@ -3,7 +3,7 @@ from app.models.user import User
 
 
 class Vehicle(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
 
     plate = models.CharField(max_length=255, blank=False)
     brand = models.CharField(max_length=255, blank=False)

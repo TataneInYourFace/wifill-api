@@ -1,16 +1,13 @@
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.viewsets import ModelViewSet
 from app.permissions.user import IsGetOrIsAdmin
 from app.serializers.gas import GasSerializer
 from app.models.gas import Gas
-from app.views.simple_modelview import SimpleModelViewSet
 
 
-class GasViewSet(SimpleModelViewSet):
-
-    model_class = Gas
+class GasViewSet(ModelViewSet):
     serializer_class = GasSerializer
-    is_related_to_user = False
+    queryset = Gas.objects.all()
     permission_classes = (IsAuthenticated, IsGetOrIsAdmin)
 
 
