@@ -10,8 +10,9 @@ class Order(models.Model):
     user = models.ForeignKey(User)
     vehicle = models.ForeignKey(Vehicle)
     address = models.ForeignKey(Address)
-    gas = models.ForeignKey(Gas)
 
+    gas_name = models.CharField(max_length=255, blank=False)
+    gas_price = models.FloatField(blank=False)
     gas_quantity = models.IntegerField(blank=False)
     date_refill = models.DateTimeField(blank=False)
     date_created = models.DateTimeField(auto_now_add=True)
