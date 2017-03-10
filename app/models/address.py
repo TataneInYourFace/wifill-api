@@ -3,7 +3,7 @@ from app.models.user import User
 
 
 class Address(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
 
     name = models.CharField(max_length=255, blank=False)
     street = models.CharField(max_length=255, blank=False)

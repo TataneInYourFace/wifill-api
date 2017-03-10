@@ -7,4 +7,3 @@ class AddressViewSet(SimpleModelViewSet):
 
     model_class = Address
     serializer_class = AddressSerializer
-
