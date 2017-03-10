@@ -16,6 +16,8 @@ class Order(models.Model):
     gas_quantity = models.IntegerField(blank=False)
     date_refill = models.DateTimeField(blank=False)
     date_created = models.DateTimeField(auto_now_add=True)
+    is_payed = models.BooleanField(default=False)
+    is_canceled = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('user', 'date_created',)
