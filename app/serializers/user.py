@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from app.models import Address
-from app.models import User
-from app.models import Vehicle
+from app.models.address import Address
+from app.models.user import User
+from app.models.vehicle import Vehicle
 from app.serializers.address import AddressSerializer
 from app.serializers.join_reader import JoinReader
 from app.serializers.vehicle import VehicleSerializer
@@ -23,7 +23,7 @@ class UserSerializer(JoinReader):
             'firstname', 'lastname', 'password', 'confirm_password', 'is_admin', 'order_set')
         join_fields = {
             'address_set': Address,
-            'vehicle_set': Vehicle
+            'vehicle_set': Vehicle,
         }
         for key, value in join_fields.items():
             fields += (key,)
