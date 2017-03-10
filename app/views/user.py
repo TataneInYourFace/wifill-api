@@ -1,5 +1,6 @@
 from django.http import Http404
 from rest_framework import viewsets, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from app.permissions.user import *
@@ -43,7 +44,7 @@ class UserViewSet(viewsets.ViewSet):
         except User.DoesNotExist:
             raise Http404
         if not (request.user.is_admin or user.id == request.user.id):
-            raise AttributeError
+            raise PermissionDenied
         if not self.request.user.is_admin and "is_admin" in request.data:
             request.data.pop("is_admin")
         serializer = self.serializer_class(user, data=request.data, partial=True)
