@@ -1,6 +1,4 @@
 from django.db import models
-
-from app.models.gas import Gas
 from app.models.user import User
 from app.models.vehicle import Vehicle
 from app.models.address import Address
@@ -20,4 +18,4 @@ class Order(models.Model):
     is_canceled = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ('user', 'date_created',)
+        ordering = ('date_refill', 'user')
