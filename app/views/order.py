@@ -36,4 +36,7 @@ class OrderViewSet(SimpleModelViewSet):
         serializer = self.serializer_class(models, many=True)
         return Response(serializer.data)
 
+    def destroy(self, request, id=None):
+        return Response({"errors": "Orders can't be deleted."}, status=status.HTTP_401_UNAUTHORIZED)
+
 
