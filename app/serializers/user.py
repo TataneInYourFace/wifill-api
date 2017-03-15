@@ -43,7 +43,7 @@ class UserSerializer(JoinReader):
             class_name = value.get("class_name")
             data = value.get("data")
             for obj in data:
-                class_name.objects.create(request=user)
+                class_name.objects.create(user=user, **obj)
         return user
 
     def update(self, instance, validated_data):
@@ -58,7 +58,7 @@ class UserSerializer(JoinReader):
             class_name = value.get("class_name")
             data = value.get("data")
             for obj in data:
-                class_name.objects.create(request=instance)
+                class_name.objects.create(user=instance, **obj)
         return instance
 
     def validate(self, data):
