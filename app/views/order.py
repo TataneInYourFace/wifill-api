@@ -30,6 +30,7 @@ class OrderViewSet(SimpleModelViewSet):
         if request.user.is_admin:
             models = self.model_class.objects.filter(q)
         else:
+            q &= Q(user=request.user)
             models = self.model_class.objects.filter(q)
         if models is None:
             return Response(status=status.HTTP_204_NO_CONTENT)
