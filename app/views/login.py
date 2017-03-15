@@ -9,13 +9,16 @@ import json
 
 
 class LoginView(APIView):
-    """
-    Register a new user.
-    """
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
 
-    def post(self, request, format=None):
+    def get_serializer_class(self):
+        return self.serializer_class
+
+    def get_serializer(self):
+        return self.serializer_class
+
+    def post(self, request, format=None , *args, **kwargs):
         username = request.data['email']
         password = request.data['password']
         user = authenticate(username=username, password=password)

@@ -9,7 +9,7 @@ from app.models.user import User
 from rest_framework_jwt.settings import api_settings
 
 
-class UserViewSet(viewsets.ViewSet):
+class UserViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsPostOrIsAuthenticated, IsOwnerOrIsAdmin,)
     serializer_class = UserSerializer
@@ -17,14 +17,14 @@ class UserViewSet(viewsets.ViewSet):
     lookup_field = 'email'
     lookup_value_regex = '[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,8}'
 
-    def list(self, request):
+    def list(self, request, **kwargs):
         users = User.objects.filter(is_valide=True)
         if users is None:
             return Response(status.HTTP_204_NO_CONTENT)
         serializer = self.serializer_class(users, many=True, context={'user': request.user})
         return Response(serializer.data)
 
-    def create(self, request):
+    def create(self, request, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -38,7 +38,7 @@ class UserViewSet(viewsets.ViewSet):
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, email=None):
+    def update(self, request, email=None, **kwargs):
         try:
             user = User.objects.get(email=email, is_valide=True)
         except User.DoesNotExist:
@@ -54,11 +54,11 @@ class UserViewSet(viewsets.ViewSet):
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, email=None):
+    def retrieve(self, request, email=None, **kwargs):
         serializer = self.serializer_class(User.objects.get(email=email, is_valide=True), context={'user': request.user})
         return Response(serializer.data)
 
-    def destroy(self, request, email=None):
+    def destroy(self, request, email=None, **kwargs):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:

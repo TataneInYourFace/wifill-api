@@ -13,7 +13,7 @@ class OrderViewSet(SimpleModelViewSet):
     model_class = Order
     serializer_class = OrderSerializer
 
-    def list(self, request):
+    def list(self, request, **kwargs):
         q = Q()
         if "start_date" in request.query_params:
             if not re.match(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", request.query_params.get("start_date")):
@@ -36,7 +36,7 @@ class OrderViewSet(SimpleModelViewSet):
         serializer = self.serializer_class(models, many=True)
         return Response(serializer.data)
 
-    def destroy(self, request, id=None):
+    def destroy(self, request, id=None, **kwargs):
         return Response({"errors": "Orders can't be deleted."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
