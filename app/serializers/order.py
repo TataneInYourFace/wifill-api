@@ -27,8 +27,8 @@ class OrderSerializer(serializers.ModelSerializer):
         """
         tomorrow = timezone.now() + datetime.timedelta(days=1)
         tomorrow_to_midnight = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
-        if data["date_refill"] <= tomorrow_to_midnight:
+        if data.get("date_refill") <= tomorrow_to_midnight:
             raise serializers.ValidationError(
-                "The refill date should be The day after tomorrow"
+                "The refill date should be at least The day after tomorrow"
             )
         return data
