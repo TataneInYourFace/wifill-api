@@ -45,9 +45,10 @@ class UserViewSet(viewsets.ModelViewSet):
             raise Http404
         if not (request.user.is_admin or user.id == request.user.id):
             raise PermissionDenied
-        if not self.request.user.is_admin and "is_admin" in request.data:
-            request.data.pop("is_admin")
-        serializer = self.serializer_class(user, data=request.data, partial=True)
+        data = request.data.copy()
+        if not self.request.user.is_admin and "is_admin" in data:
+            data.pop("is_admin")
+        serializer = self.serializer_class(user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
