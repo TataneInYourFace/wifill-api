@@ -1,5 +1,7 @@
 # Wefill-API	
 
+[![GuardRails badge](https://badges.production.guardrails.io/gitsignore/wefill-api.svg)](https://www.guardrails.io)
+
 This is the rest API used by the [Wefill](https://github.com/TataneInYourFace/wefill) app.
 
 ## Summary
